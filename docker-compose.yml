@@ -1,18 +1,24 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:15-alpine
-    container_name: synergy_postgres
-    restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: adminpassword
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: synergy_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      # Тут ми вказуємо бекенду стукати на хост 'db' замість 'localhost'
+      - DATABASE_URL=postgresql+psycopg2://user:password@db:5432/synergy_db
 
 volumes:
   postgres_data:
