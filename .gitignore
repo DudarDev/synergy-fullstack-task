@@ -1,0 +1,23 @@
+# Віртуальне середовище
+backend/venv/
+venv/
+env/
+
+# Кеш Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Файли баз даних (якщо випадково створяться SQLite)
+*.sqlite3
+db.sqlite3
+
+# Секрети та конфігурації
+.env
+
+# Системні файли Mac
+.DS_Store
+
+# Кеш pytest
+.pytest_cache/
