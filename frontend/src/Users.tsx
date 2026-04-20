@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { api } from './api';
 
+// Виправляємо на змінні так, як їх віддає Python (з підкресленнями)
 interface User {
   id: number;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   email: string;
 }
 
@@ -27,10 +28,11 @@ export default function Users() {
 
   const handleSort = () => {
     const sorted = [...users].sort((a, b) => {
+      // Тут теж використовуємо first_name
       if (sortOrder === 'asc') {
-        return a.firstName.localeCompare(b.firstName);
+        return a.first_name.localeCompare(b.first_name);
       } else {
-        return b.firstName.localeCompare(a.firstName);
+        return b.first_name.localeCompare(a.first_name);
       }
     });
     setUsers(sorted);
@@ -41,7 +43,7 @@ export default function Users() {
     if (!window.confirm('Ви впевнені, що хочете видалити цього користувача?')) return;
     
     try {
-      await api.delete(`/users/${id}`); // Тепер це реальний запит на бекенд!
+      await api.delete(`/users/${id}`);
       setUsers(users.filter(user => user.id !== id));
       alert('Користувача видалено!');
     } catch (error) {
@@ -54,8 +56,9 @@ export default function Users() {
     if (!newName || newName === currentName) return;
 
     try {
-      await api.put(`/users/${id}?first_name=${newName}`); // Реальний запит на оновлення
-      setUsers(users.map(u => u.id === id ? { ...u, firstName: newName } : u));
+      await api.put(`/users/${id}?first_name=${newName}`);
+      // Оновлюємо first_name локально
+      setUsers(users.map(u => u.id === id ? { ...u, first_name: newName } : u));
     } catch (error) {
       alert('Помилка при редагуванні');
     }
@@ -89,11 +92,11 @@ export default function Users() {
             users.map(user => (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.firstName}</td>
-                <td>{user.lastName}</td>
+                <td>{user.first_name}</td>  {/* Виводимо first_name */}
+                <td>{user.last_name}</td>   {/* Виводимо last_name */}
                 <td>{user.email}</td>
                 <td>
-                  <button onClick={() => handleEdit(user.id, user.firstName)} style={{ marginRight: '10px', cursor: 'pointer' }}>Редагувати</button>
+                  <button onClick={() => handleEdit(user.id, user.first_name)} style={{ marginRight: '10px', cursor: 'pointer' }}>Редагувати</button>
                   <button onClick={() => handleDelete(user.id)} style={{ color: 'red', cursor: 'pointer' }}>Видалити</button>
                 </td>
               </tr>
