@@ -1,5 +1,6 @@
 import httpx
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware # <--- ДОДАНО ІМПОРТ CORS
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -11,6 +12,15 @@ from database import engine, get_db
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Synergy Task API")
+
+# --- ДОДАЄМО ДОЗВІЛ ДЛЯ ФРОНТЕНДУ (CORS) ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Дозволяємо запити з будь-яких адрес (для тестування)
+    allow_credentials=True,
+    allow_methods=["*"],  # Дозволяємо всі методи (GET, POST, PUT, DELETE)
+    allow_headers=["*"],  # Дозволяємо всі заголовки
+)
 
 @app.post("/sync", summary="Завантажити дані з dummyjson.com")
 async def sync_data(db: Session = Depends(get_db)):
