@@ -70,3 +70,41 @@ def get_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
 @app.get("/posts", response_model=List[schemas.PostResponse], summary="Отримати всі пости")
 def get_posts(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return db.query(models.Post).offset(skip).limit(limit).all()
+
+@app.delete("/users/{user_id}", summary="Видалити користувача")
+def delete_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="Користувача не знайдено")
+    db.delete(db_user)
+    db.commit()
+    return {"message": "Користувача видалено"}
+
+@app.delete("/posts/{post_id}", summary="Видалити пост")
+def delete_post(post_id: int, db: Session = Depends(get_db)):
+    db_post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not db_post:
+        raise HTTPException(status_code=404, detail="Пост не знайдено")
+    db.delete(db_post)
+    db.commit()
+    return {"message": "Пост видалено"}
+
+@app.put("/users/{user_id}", summary="Редагувати ім'я користувача")
+def update_user(user_id: int, first_name: str, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not db_user:
+        raise HTTPException(status_code=404, detail="Користувача не знайдено")
+    db_user.first_name = first_name # Для простоти дозволимо змінювати тільки ім'я
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@app.put("/posts/{post_id}", summary="Редагувати заголовок поста")
+def update_post(post_id: int, title: str, db: Session = Depends(get_db)):
+    db_post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not db_post:
+        raise HTTPException(status_code=404, detail="Пост не знайдено")
+    db_post.title = title # Дозволимо змінювати тільки заголовок
+    db.commit()
+    db.refresh(db_post)
+    return db_post
