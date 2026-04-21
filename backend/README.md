@@ -10,16 +10,27 @@ It synchronizes data from DummyJSON and provides full CRUD operations.
 
 ## How to Run the Project Locally
 
+### Prerequisites
+* Docker and Docker Compose installed.
+
+### Steps to Run
 1. Clone the repository:
    ```bash
    git clone <your-github-repo-url>
    cd synergy-fullstack-task
-Run Docker Compose:
+   ```
 
-Bash
-docker compose up -d --build
-Access the application:
+2. Start the application using Docker Compose:
+   ```bash
+   docker compose up -d --build
+   ```
 
-Frontend: http://localhost:80
+3. Access the services:
+   * **Frontend:** [http://localhost:80](http://localhost:80)
+   * **Backend API (Swagger):** [http://localhost:8000/docs](http://localhost:8000/docs)
 
-Backend API (Swagger): http://localhost:8000/docs
+## Running Tests
+
+To run the backend suite of tests, use the following command:
+```bash
+docker compose exec backend pytest
