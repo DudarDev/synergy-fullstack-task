@@ -10,6 +10,10 @@ RUN npm run build
 FROM nginx:alpine
 # Копіюємо результат з попереднього етапу в папку Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# ДОДАНО: Копіюємо наш правильний конфіг Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Відкриваємо стандартний веб-порт
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
